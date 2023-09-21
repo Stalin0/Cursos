@@ -32,6 +32,8 @@ my_other_list.append("Apunte")#Agregar se inserta por defecto al ultimo
 print(my_other_list)
 my_other_list.insert(1, "azul")#Se inserta segun la posicion que se le indique
 print(my_other_list)
+my_other_list[1] = "Rojo"
+print(my_other_list)
 #En el caso de usa el signo "-" de la resta nos da un error
 #print(my_list - my_other_list)
 my_list.remove(30)#Elimina segun el dato indicado
@@ -57,6 +59,26 @@ my_list = "Hola Mundo"
 print(my_list)
 print(type(my_list))
 #Dentro de python no se puede crear constantes 
-y_list = ["Hola Mundo"]
+my_list = ["Hola Mundo"]
 print(my_list)
 print(type(my_list))
+my_list_1 =[1, 5202, 855, 96, 65, 85, 9, 5, 47]
+#Otra manera de llamamiento segun la posicion de los elementos
+del my_list_1[0]#Funcion "del" que me elimina por posciones 
+#Dentro de esto hemos utilizado la función "del" que hace la eliminacion por indice
+print(my_list_1)
+#Podemos crear una nueva variable que es la siguiente
+my_new_list = my_list_1.copy()
+my_list_1.clear()
+print(my_list_1)
+my_new_list.reverse()
+print(my_new_list)
+#Con la funcion del "short" lo que hacemos es ordenar la lista que tengamos
+#Por Ejemplo
+my_new_list.sort()
+print(my_new_list)
+#Tambien podemos hacer sublistas de la sigueinte manera
+#Tomando la posición de la lista
+print(my_new_list[1:3])
+
+
