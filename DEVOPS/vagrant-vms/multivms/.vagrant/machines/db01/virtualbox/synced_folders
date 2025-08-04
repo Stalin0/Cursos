@@ -1,0 +1,1 @@
+{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"C:/Users/viamatica/Documents/Personal/Cursos/DEVOPS/vagrant-vms/multivms","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}}}
