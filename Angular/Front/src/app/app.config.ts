@@ -6,14 +6,13 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
 
     //HashStrategy
     {
       provide: LocationStrategy,
-      useClass: HashLocationStrategy
-    }
-  
-  ]
+      useClass: HashLocationStrategy,
+    },
+  ],
 };

@@ -5,29 +5,24 @@ import { DragonballPageComponent } from './pages/dragonball/dragonball-page.comp
 import { DragonballSuperPageComponent } from './pages/dragonball-super/dragonball-super-page.component';
 
 export const routes: Routes = [
-
-    {
-        path: '',
-        component: CounterPageComponent,
-        
-       
-    },
-    {
-        path: 'hero',
-        component: HeroPageComponent
-    },
-    {
-        path: 'dragonball',
-        component: DragonballPageComponent
-
-    },
-    {
-        path:'dragonball-super',
-        component: DragonballSuperPageComponent
-    },
-    {
-        path: '**',
-        redirectTo:''
-
-    }
+  {
+    path: '',
+    component: CounterPageComponent,
+  },
+  {
+    path: 'hero',
+    component: HeroPageComponent,
+  },
+  {
+    path: 'dragonball',
+    component: DragonballPageComponent,
+  },
+  {
+    path: 'dragonball-super',
+    component: DragonballSuperPageComponent,
+  },
+  {
+    path: '**',
+    redirectTo: '',
+  },
 ];
