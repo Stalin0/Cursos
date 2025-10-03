@@ -1,5 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { RouterLink, RouterLinkActive } from "@angular/router";
+import { GifService } from "@gifs/services/gifs.service";
 
 interface MenuOption {
   label: string;
@@ -12,9 +13,12 @@ interface MenuOption {
   selector: "gifs-side-menu-options",
   templateUrl: "./side-menu-options.component.html",
   styleUrls: [],
+  changeDetection: ChangeDetectionStrategy.OnPush, //UI mas fluida al User
   imports: [RouterLink],
 })
 export default class SideMenuOptionsComponent {
+  private readonly gifService = inject(GifService)
+  readonly searchHistoryKeys = this.gifService.searchHistoryKeys
   menuOptions: MenuOption[] = [
     {
       label: "Trending",

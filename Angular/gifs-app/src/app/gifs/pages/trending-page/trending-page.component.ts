@@ -26,4 +26,3 @@ export default class TrendingPageComponent {
   // gifs = signal(imageUrls);
   gifService = inject(GifService);
 }
-
