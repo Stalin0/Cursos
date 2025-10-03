@@ -9,5 +9,5 @@ export const environment = {
 
   //Urls
   giphyUrl: "https://api.giphy.com/v1",
-  searchUrl: "https://api.giphy.com/v1"
+  searchUrl: "https://api.giphy.com/v1",
 };
