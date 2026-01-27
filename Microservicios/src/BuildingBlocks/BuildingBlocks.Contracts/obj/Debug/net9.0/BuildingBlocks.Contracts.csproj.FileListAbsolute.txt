@@ -1,0 +1,12 @@
+C:\Users\viamatica\Documents\Personal\Cursos\Microservicios\src\BuildingBlocks\BuildingBlocks.Contracts\bin\Debug\net9.0\BuildingBlocks.Contracts.deps.json
+C:\Users\viamatica\Documents\Personal\Cursos\Microservicios\src\BuildingBlocks\BuildingBlocks.Contracts\bin\Debug\net9.0\BuildingBlocks.Contracts.dll
+C:\Users\viamatica\Documents\Personal\Cursos\Microservicios\src\BuildingBlocks\BuildingBlocks.Contracts\bin\Debug\net9.0\BuildingBlocks.Contracts.pdb
+C:\Users\viamatica\Documents\Personal\Cursos\Microservicios\src\BuildingBlocks\BuildingBlocks.Contracts\obj\Debug\net9.0\BuildingBlocks.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\viamatica\Documents\Personal\Cursos\Microservicios\src\BuildingBlocks\BuildingBlocks.Contracts\obj\Debug\net9.0\BuildingBlocks.Contracts.AssemblyInfoInputs.cache
+C:\Users\viamatica\Documents\Personal\Cursos\Microservicios\src\BuildingBlocks\BuildingBlocks.Contracts\obj\Debug\net9.0\BuildingBlocks.Contracts.AssemblyInfo.cs
+C:\Users\viamatica\Documents\Personal\Cursos\Microservicios\src\BuildingBlocks\BuildingBlocks.Contracts\obj\Debug\net9.0\BuildingBlocks.Contracts.csproj.CoreCompileInputs.cache
+C:\Users\viamatica\Documents\Personal\Cursos\Microservicios\src\BuildingBlocks\BuildingBlocks.Contracts\obj\Debug\net9.0\BuildingBlocks.Contracts.sourcelink.json
+C:\Users\viamatica\Documents\Personal\Cursos\Microservicios\src\BuildingBlocks\BuildingBlocks.Contracts\obj\Debug\net9.0\BuildingBlocks.Contracts.dll
+C:\Users\viamatica\Documents\Personal\Cursos\Microservicios\src\BuildingBlocks\BuildingBlocks.Contracts\obj\Debug\net9.0\refint\BuildingBlocks.Contracts.dll
+C:\Users\viamatica\Documents\Personal\Cursos\Microservicios\src\BuildingBlocks\BuildingBlocks.Contracts\obj\Debug\net9.0\BuildingBlocks.Contracts.pdb
+C:\Users\viamatica\Documents\Personal\Cursos\Microservicios\src\BuildingBlocks\BuildingBlocks.Contracts\obj\Debug\net9.0\ref\BuildingBlocks.Contracts.dll
