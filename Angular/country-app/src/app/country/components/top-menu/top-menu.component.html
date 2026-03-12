@@ -1,3 +1,43 @@
-<p>
-  top-menu works!
-</p>
+<nav class="p-4 w-full">
+  <ul class="menu bg-base-200 sm:menu-horizontal rounded-box">
+    <li>
+      <a
+      [routerLink]="['by-capital']"
+      routerLinkActive="btn-primary"
+      class="btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+          <path
+            fill="none"
+            stroke="currentColor"
+            d="M.5 15.5v-2.25S6 10.5 9.75 9.5V4.211c0-.79.23-1.565.707-2.194c.364-.48.828-1.052 1.293-1.517h.5c.465.465.93 1.037 1.293 1.517c.478.629.707 1.404.707 2.194V9.5c3.75 1 9.25 3.75 9.25 3.75v2.25s-5.5-1-9.25-1c0 0-.5 2.28-.5 6.5c0 0 1.25.75 2.25 1.75v.5S13.75 23 12 23s-4 .25-4 .25v-.5c1-1 2.25-1.75 2.25-1.75c0-4.22-.5-6.5-.5-6.5c-3.75 0-9.25 1-9.25 1Z"
+            stroke-width="1"
+          />
+        </svg>
+        Por Capital
+      </a>
+    </li>
+    <li>
+      <a [routerLink]="['by-country']"
+      routerLinkActive="btn-primary"
+      class="btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+          <path
+            fill="none"
+            stroke="currentColor"
+            d="M12 9h-1a1 1 0 0 0-1 1v.375a1 1 0 0 0 .72.96l2.56.747a1 1 0 0 1 .72.96V14a1 1 0 0 1-1 1h-1m0-6h1a1 1 0 0 1 1 1v.5M12 9V7.5m0 7.5h-1a1 1 0 0 1-1-1v-.5m2 1.5v1.5M1 3h12a8 8 0 0 1 8 8M1 3c.41 0 .99-.247 1.41-.503a5.6 5.6 0 0 0 1.458-1.305C4.186.792 4.5.318 4.5 0M1 3c.41 0 .99.247 1.41.503a5.6 5.6 0 0 1 1.458 1.305c.318.4.632.874.632 1.192M23 21H11a8 8 0 0 1-8-8m20 8c-.41 0-.99.247-1.41.503a5.6 5.6 0 0 0-1.458 1.305c-.318.4-.632.874-.632 1.192m3.5-3c-.41 0-.99-.247-1.41-.503a5.6 5.6 0 0 1-1.458-1.305c-.318-.4-.632-.874-.632-1.192M18 12a6 6 0 1 0-12 0a6 6 0 0 0 12 0Z"
+            stroke-width="1"
+          />
+        </svg>
+        Por país
+      </a>
+    </li>
+    <li>
+      <a [routerLink]="['by-region']"
+      routerLinkActive="btn-primary"
+      class="btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="none" stroke="currentColor" d="M6.5 7.5h11m-11 0A5.5 5.5 0 0 1 12 2M6.5 7.5v2a1 1 0 0 1-1 1H4v5h1.5a1 1 0 0 1 1 1v1.828a6 6 0 0 1-1.986 4.46L4 23.25v.25h16v-.25l-.514-.462a6 6 0 0 1-1.986-4.46V16.5a1 1 0 0 1 1-1H20v-5h-1.5a1 1 0 0 1-1-1v-2m0 0A5.5 5.5 0 0 0 12 2m0 0V0M4.5 7.5h15M9.5 21v2.5m5-2.5v2.5m0-10.5a2.5 2.5 0 1 0-5 0a2.5 2.5 0 0 0 5 0Z" stroke-width="1"/></svg>
+        Por región
+      </a>
+    </li>
+  </ul>
+</nav>

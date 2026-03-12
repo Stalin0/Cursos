@@ -4,7 +4,7 @@ import TopMenuComponent from '../../components/top-menu/top-menu.component';
 @Component({
   selector: 'app-CountryLayout',
   templateUrl: './CountryLayout.component.html',
-  imports: [RouterOutlet, TopMenuComponent],
+  imports: [TopMenuComponent, RouterOutlet],
 })
 export class CountryLayoutComponent implements OnInit {
   constructor() {}
