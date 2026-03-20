@@ -8,6 +8,7 @@
         <th>Nombre</th>
         <th>Capital</th>
         <th>Población</th>
+        <th>Acción</th>
       </tr>
     </thead>
     <tbody>
@@ -17,18 +18,42 @@
           <td class="text-xl">{{ country.flag }}</td>
           <td>
             <img
-              [src]="country.flags.svg"
-              [alt]="country.name.common"
+              [src]="country.flagSvg"
+              [alt]="country.name"
               class="w-14 h-10 object-cover rounded-md border border-base-300 shadow-sm"
             />
           </td>
-          <td>{{ country.name.common }}</td>
-          <td>{{ country?.capital?.[0] ?? 'Sin Capital' }}</td>
-          <td>{{ country.population }}</td>
-          <td class="link-primary cursor-pointer">Más Información</td>
+          <td>{{ country.name }}</td>
+          <td>{{ country.capital }}</td>
+          <td>
+            <span class="badge badge-secondary">
+              {{ country.population | number }}
+            </span>
+          </td>
+          <td>
+            <a [routerLink]="['/country/by', country.cca2]" class="link-primary cursor-pointer"
+              >Más Información</a
+            >
+          </td>
         </tr>
       }
-      <tr></tr>
+      @if (errorMessage()) {
+        <tr>
+          <td colspan="8" class="text-center">{{ errorMessage() }}</td>
+        </tr>
+      }
+      <!--  -->
+      @if (countries().length == 0 && !isLoading()) {
+        <tr>
+          <td colspan="8" class="text-center">No se encontraron resultados</td>
+        </tr>
+      }
+      <!--  -->
+      @if (isLoading()) {
+        <tr>
+          <td colspan="8" class="text-center">Buscando Países</td>
+        </tr>
+      }
     </tbody>
   </table>
 </section>

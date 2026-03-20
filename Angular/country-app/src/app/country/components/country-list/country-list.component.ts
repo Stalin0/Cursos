@@ -1,10 +1,16 @@
 import { Component, input } from '@angular/core';
-import { RESTCountry } from '../../interfaces/rest-countries.interface';
+import { Country } from '../../interfaces/country.interface';
+import { DecimalPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'country-list',
   templateUrl: './country-list.component.html',
+  imports: [DecimalPipe, RouterLink],
 })
 export class CountryListComponent {
-  countries = input.required<RESTCountry[]>();
+  countries = input.required<Country[]>();
+  errorMessage = input<string | unknown | null>();
+  isLoading = input<boolean>(false);
+  isEmty = input<boolean>(false);
 }
