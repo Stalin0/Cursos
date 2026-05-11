@@ -1,0 +1,13 @@
+bin/
+obj/
+**/bin/
+**/obj/
+
+.dotnet/
+.nuget/
+.templateengine/
+
+.vs/
+.idea/
+*.user
+*.suo

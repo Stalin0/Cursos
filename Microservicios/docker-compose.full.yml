@@ -1,0 +1,104 @@
+services:
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  users-db:
+    image: postgres:17
+    container_name: users_db
+    environment:
+      POSTGRES_DB: users_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - users_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d users_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  contacts-db:
+    image: postgres:17
+    container_name: contacts_db
+    environment:
+      POSTGRES_DB: contacts_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5433:5432"
+    volumes:
+      - contacts_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d contacts_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  ms-user:
+    build:
+      context: .
+      dockerfile: src/ms-user/Dockerfile
+    container_name: ms_user
+    depends_on:
+      rabbitmq:
+        condition: service_started
+      users-db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__UsersDatabase: Host=users-db;Port=5432;Database=users_db;Username=postgres;Password=admin
+      RabbitMq__Uri: amqp://guest:guest@rabbitmq:5672
+
+  ms-contact:
+    build:
+      context: .
+      dockerfile: src/ms-contact/Dockerfile
+    container_name: ms_contact
+    depends_on:
+      rabbitmq:
+        condition: service_started
+      contacts-db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__ContactsDatabase: Host=contacts-db;Port=5432;Database=contacts_db;Username=postgres;Password=admin
+      RabbitMq__Uri: amqp://guest:guest@rabbitmq:5672
+
+  audit-service:
+    build:
+      context: .
+      dockerfile: src/ms-audit/Dockerfile
+    container_name: audit_service
+    depends_on:
+      rabbitmq:
+        condition: service_started
+    environment:
+      RabbitMq__Uri: amqp://guest:guest@rabbitmq:5672
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: src/api-gateway/Dockerfile
+    container_name: api_gateway
+    depends_on:
+      - ms-user
+      - ms-contact
+      - audit-service
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      RabbitMq__Uri: amqp://guest:guest@rabbitmq:5672
+    ports:
+      - "7000:8080"
+
+volumes:
+  users_db_data:
+  contacts_db_data:

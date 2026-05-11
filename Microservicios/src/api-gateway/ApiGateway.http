@@ -1,0 +1,38 @@
+@ApiGateway_HostAddress = http://localhost:7000
+
+POST {{ApiGateway_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "documentNumber": "1234567890",
+  "firstName": "Ana",
+  "lastName": "Gomez",
+  "email": "ana@test.com"
+}
+
+###
+
+GET {{ApiGateway_HostAddress}}/api/users/{{userId}}
+Accept: application/json
+
+###
+
+POST {{ApiGateway_HostAddress}}/api/contacts
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}",
+  "contactName": "Juan Perez",
+  "phone": "0999999999",
+  "email": "juan@test.com"
+}
+
+###
+
+GET {{ApiGateway_HostAddress}}/api/contacts/user/{{userId}}
+Accept: application/json
+
+###
+
+GET {{ApiGateway_HostAddress}}/api/user-contact/{{userId}}
+Accept: application/json

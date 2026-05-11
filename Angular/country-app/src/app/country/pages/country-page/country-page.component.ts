@@ -4,11 +4,12 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { NotFoundComponent } from '../../../shared/components/not-found/not-found.component';
+import { CountryInformationComponent } from './country-information.component/country-information.component';
 
 @Component({
   selector: 'app-country-page',
   templateUrl: './country-page.component.html',
-  imports: [NotFoundComponent],
+  imports: [NotFoundComponent, CountryInformationComponent],
 })
 export class CountryPageComponent {
   countryCode = inject(ActivatedRoute).snapshot.params['code'];

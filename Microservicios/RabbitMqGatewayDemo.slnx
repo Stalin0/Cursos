@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/api-gateway/ApiGateway.csproj" />
+    <Project Path="src/ms-audit/MsAudit.csproj" />
+    <Project Path="src/ms-contact/MsContact.csproj" />
+    <Project Path="src/ms-user/MsUser.csproj" />
+    <Project Path="src/shared-contracts/SharedContracts.csproj" />
+  </Folder>
+</Solution>
