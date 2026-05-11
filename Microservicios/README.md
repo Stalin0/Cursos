@@ -199,20 +199,23 @@ NestJS actual:
 }
 ```
 
-## Ejecutar con Docker
+## Ejecutar en local
 
 ```bash
-docker compose up --build
+dotnet run --project src/ms-user/MsUser.csproj --launch-profile http
+dotnet run --project src/ms-contact/MsContact.csproj --launch-profile http
+dotnet run --project src/ms-audit/MsAudit.csproj --launch-profile AuditService
+dotnet run --project src/ms-blockchain/MsBlockchain.csproj --launch-profile BlockchainService
+dotnet run --project src/api-gateway/ApiGateway.csproj --launch-profile http
 ```
 
-Servicios expuestos al host:
+Servicios locales:
 
 - `ApiGateway`: `http://localhost:7000`
 - `Swagger`: `http://localhost:7000/swagger`
 - `RabbitMQ AMQP`: `localhost:5672`
 - `RabbitMQ Management`: `http://localhost:15672`
-- `users_db`: `localhost:5432`
-- `contacts_db`: `localhost:5433`
+- `PostgreSQL`: `localhost:5432`
 
 Usuario RabbitMQ:
 
