@@ -5,7 +5,8 @@ using MassTransit;
 namespace ApiGateway.Services;
 
 public sealed class UserGatewayService(IRequestClient<CreateUserCommand> createUserClient,
-    IRequestClient<GetUserByIdQuery> getUserByIdClient) : IUserGatewayService
+    IRequestClient<GetUserByIdQuery> getUserByIdClient,
+    IRequestClient<UpdateUserCommand> updateUserClient) : IUserGatewayService
 {
     public async Task<UserResponse> CreateAsync(CreateUserRequest request, CancellationToken cancellationToken)
     {
@@ -24,6 +25,20 @@ public sealed class UserGatewayService(IRequestClient<CreateUserCommand> createU
     {
         var response = await getUserByIdClient.GetResponse<UserResult>(
             new GetUserByIdQuery(userId),
+            cancellationToken);
+
+        return response.Message.Found ? MapRequired(response.Message) : null;
+    }
+
+    public async Task<UserResponse?> UpdateAsync(Guid userId, UpdateUserRequest request, CancellationToken cancellationToken)
+    {
+        var response = await updateUserClient.GetResponse<UserResult>(
+            new UpdateUserCommand(
+                userId,
+                request.DocumentNumber,
+                request.FirstName,
+                request.LastName,
+                request.Email),
             cancellationToken);
 
         return response.Message.Found ? MapRequired(response.Message) : null;

@@ -25,7 +25,11 @@ builder.Services.AddScoped<IBlockchainLedgerService, BlockchainLedgerService>();
 builder.Services.AddMassTransit(configurator =>
 {
     configurator.AddConsumer<UserCreatedBlockchainConsumer>();
+    configurator.AddConsumer<UserUpdatedBlockchainConsumer>();
     configurator.AddConsumer<ContactCreatedBlockchainConsumer>();
+    configurator.AddConsumer<AccountOpenedBlockchainConsumer>();
+    configurator.AddConsumer<FundsDepositedBlockchainConsumer>();
+    configurator.AddConsumer<FundsTransferredBlockchainConsumer>();
 
     configurator.UsingRabbitMq((context, rabbitMq) =>
     {

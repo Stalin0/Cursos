@@ -19,9 +19,11 @@ Write-Host "  - RabbitMQ running on localhost:5672" -ForegroundColor Yellow
 Write-Host "  - PostgreSQL running on localhost:5432" -ForegroundColor Yellow
 Write-Host "  - Databases ready: users_db and contacts_db" -ForegroundColor Yellow
 Write-Host "  - blockchain_db will be created automatically by ms-blockchain" -ForegroundColor Yellow
+Write-Host "  - ledger_db will be created automatically by ms-ledger" -ForegroundColor Yellow
 
 Start-ServiceWindow -Title "ms-user" -ProjectPath "src/ms-user/MsUser.csproj" -LaunchProfile "http"
 Start-ServiceWindow -Title "ms-contact" -ProjectPath "src/ms-contact/MsContact.csproj" -LaunchProfile "http"
+Start-ServiceWindow -Title "ms-ledger" -ProjectPath "src/ms-ledger/MsLedger.csproj" -LaunchProfile "http"
 Start-ServiceWindow -Title "ms-audit" -ProjectPath "src/ms-audit/MsAudit.csproj" -LaunchProfile "AuditService"
 Start-ServiceWindow -Title "ms-blockchain" -ProjectPath "src/ms-blockchain/MsBlockchain.csproj" -LaunchProfile "BlockchainService"
 Start-ServiceWindow -Title "api-gateway" -ProjectPath "src/api-gateway/ApiGateway.csproj" -LaunchProfile "http"

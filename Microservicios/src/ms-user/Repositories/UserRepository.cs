@@ -18,4 +18,15 @@ public sealed class UserRepository(UsersDbContext dbContext) : IUserRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(user => user.Id == id, cancellationToken);
     }
+
+    public Task<User?> GetByIdForUpdateAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return dbContext.Users
+            .FirstOrDefaultAsync(user => user.Id == id, cancellationToken);
+    }
+
+    public Task SaveChangesAsync(CancellationToken cancellationToken)
+    {
+        return dbContext.SaveChangesAsync(cancellationToken);
+    }
 }

@@ -19,6 +19,7 @@ builder.Services.AddMassTransit(configurator =>
 {
     configurator.AddConsumer<CreateUserConsumer>();
     configurator.AddConsumer<GetUserByIdConsumer>();
+    configurator.AddConsumer<UpdateUserConsumer>();
 
     configurator.UsingRabbitMq((context, rabbitMq) =>
     {

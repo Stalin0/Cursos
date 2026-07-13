@@ -1,0 +1,292 @@
+<svg style="display:none"><defs></defs></svg>
+<style>
+  :root{
+    --paper:#F4F5F7;
+    --card:#FFFFFF;
+    --ink:#16181D;
+    --ink-soft:#5A616E;
+    --line:#E2E5EA;
+    --accent:#6D28D9;      /* violeta señal */
+    --accent-soft:#EDE7FB;
+    --amber:#F59E0B;       /* affordance "interactivo / en vivo" */
+    --amber-soft:#FEF3D9;
+    --blue:#2348C6;        /* estructura / código */
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  *{box-sizing:border-box}
+  .lab{
+    font-family:var(--sans); color:var(--ink); background:var(--paper);
+    border:1px solid var(--line); border-radius:14px; overflow:hidden;
+    max-width:880px; margin:0 auto;
+  }
+  .lab-head{
+    padding:20px 22px; border-bottom:1px solid var(--line); background:var(--card);
+  }
+  .lab-head h2{margin:0; font-size:19px; letter-spacing:-.01em}
+  .lab-head p{margin:6px 0 0; font-size:13px; color:var(--ink-soft)}
+  .tag{display:inline-block; font-family:var(--mono); font-size:11px; font-weight:600;
+       color:var(--accent); background:var(--accent-soft); padding:2px 8px; border-radius:6px; margin-bottom:8px}
+  .tabs{display:flex; gap:2px; padding:10px 14px 0; background:var(--card); border-bottom:1px solid var(--line); flex-wrap:wrap}
+  .tab{
+    appearance:none; border:0; background:transparent; cursor:pointer;
+    font-family:var(--sans); font-size:13px; font-weight:600; color:var(--ink-soft);
+    padding:9px 13px; border-radius:8px 8px 0 0; position:relative; top:1px;
+  }
+  .tab[aria-selected="true"]{color:var(--accent); background:var(--paper); border:1px solid var(--line); border-bottom:1px solid var(--paper)}
+  .panel{padding:22px; display:none}
+  .panel[data-active="true"]{display:block; animation:fade .25s ease}
+  @keyframes fade{from{opacity:0; transform:translateY(4px)}to{opacity:1; transform:none}}
+  .panel h3{margin:0 0 4px; font-size:15px}
+  .panel .hint{margin:0 0 16px; font-size:13px; color:var(--ink-soft); line-height:1.5}
+  code{font-family:var(--mono); font-size:12px; background:#EEF0F4; padding:1px 5px; border-radius:5px; color:var(--blue)}
+  pre{font-family:var(--mono); font-size:12px; line-height:1.6; background:var(--ink); color:#E7E9EE;
+      padding:14px 16px; border-radius:10px; overflow-x:auto; margin:14px 0 0}
+  pre .k{color:#C792EA} pre .p{color:#82AAFF} pre .v{color:#C3E88D} pre .c{color:#637777}
+
+  /* ---- box model ---- */
+  .bm-stage{display:grid; grid-template-columns:1fr; gap:18px; align-items:center}
+  @media(min-width:620px){.bm-stage{grid-template-columns:1.3fr 1fr}}
+  .bm-margin{background:var(--amber-soft); padding:var(--m,28px); border-radius:10px; transition:.15s}
+  .bm-border{background:var(--accent-soft); border:var(--b,6px) solid var(--accent); border-radius:6px; transition:.15s}
+  .bm-padding{background:#fff; padding:var(--p,22px); transition:.15s}
+  .bm-content{background:var(--ink); color:#fff; font-family:var(--mono); font-size:12px; text-align:center; padding:14px 8px; border-radius:4px}
+  .lbl{font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); display:block; margin-bottom:-4px; padding:2px 6px}
+  .ctrl{margin-bottom:14px}
+  .ctrl label{display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:6px}
+  .ctrl label span{font-family:var(--mono); color:var(--accent)}
+  input[type=range]{width:100%; accent-color:var(--accent)}
+
+  /* ---- flexbox / grid playground ---- */
+  .pg{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px}
+  .seg{display:inline-flex; border:1px solid var(--line); border-radius:9px; overflow:hidden; background:#fff}
+  .seg button{appearance:none; border:0; background:#fff; cursor:pointer; font-family:var(--mono); font-size:11px;
+              padding:7px 10px; color:var(--ink-soft); border-right:1px solid var(--line)}
+  .seg button:last-child{border-right:0}
+  .seg button[aria-pressed="true"]{background:var(--accent); color:#fff}
+  .seg-label{font-size:11px; font-weight:700; color:var(--ink-soft); align-self:center; margin-right:2px; font-family:var(--mono)}
+  .flex-stage, .grid-stage{
+    border:1.5px dashed var(--accent); border-radius:10px; background:repeating-linear-gradient(45deg,#fff,#fff 10px,#FAFAFD 10px,#FAFAFD 20px);
+    min-height:170px; padding:10px; margin-top:4px;
+  }
+  .flex-stage{display:flex}
+  .box{background:var(--accent); color:#fff; font-family:var(--mono); font-weight:600; font-size:13px;
+       border-radius:8px; display:grid; place-items:center; box-shadow:0 1px 3px rgba(109,40,217,.3)}
+  .flex-stage .box{width:54px; height:54px; margin:4px}
+  .flex-stage .box.tall{height:90px} .flex-stage .box.short{height:40px}
+  .grid-stage{display:grid; gap:8px; grid-template-columns:repeat(3,1fr)}
+  .grid-stage .box{min-height:54px}
+
+  /* ---- components gallery ---- */
+  .gal{display:grid; gap:18px}
+  .demo{border:1px solid var(--line); border-radius:12px; background:#fff; overflow:hidden}
+  .demo-top{padding:18px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center}
+  .demo-name{font-family:var(--mono); font-size:11px; color:var(--ink-soft); padding:8px 14px; border-top:1px solid var(--line); background:#FAFBFC}
+  .btn{font-family:var(--sans); font-weight:600; font-size:13px; border-radius:9px; padding:9px 16px; cursor:pointer; border:1px solid transparent}
+  .btn-primary{background:var(--accent); color:#fff}
+  .btn-ghost{background:#fff; color:var(--accent); border-color:var(--accent)}
+  .btn-soft{background:var(--accent-soft); color:var(--accent)}
+  .card-demo{width:230px; border:1px solid var(--line); border-radius:12px; overflow:hidden; text-align:left}
+  .card-demo .ch{height:70px; background:linear-gradient(120deg,var(--accent),#9D6BF0)}
+  .card-demo .cb{padding:14px}
+  .card-demo h4{margin:0 0 4px; font-size:14px}
+  .card-demo p{margin:0; font-size:12px; color:var(--ink-soft); line-height:1.5}
+  .field{display:flex; flex-direction:column; gap:5px; text-align:left; width:230px}
+  .field label{font-size:12px; font-weight:600}
+  .field input{font-family:var(--sans); font-size:13px; padding:9px 11px; border:1px solid var(--line); border-radius:9px; outline:none}
+  .field input:focus{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+  .badge{font-family:var(--mono); font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px}
+  .badge.ok{background:#E3F6EA; color:#1B7A43} .badge.warn{background:var(--amber-soft); color:#9A6700} .badge.info{background:var(--accent-soft); color:var(--accent)}
+  .nav-demo{display:flex; align-items:center; gap:18px; width:100%; max-width:340px; padding:10px 14px; border:1px solid var(--line); border-radius:10px}
+  .nav-demo b{font-size:13px} .nav-demo a{font-size:12px; color:var(--ink-soft); text-decoration:none; cursor:pointer}
+  .nav-demo a:hover{color:var(--accent)} .nav-demo .sp{flex:1}
+</style>
+
+<div class="lab">
+  <div class="lab-head">
+    <span class="tag">LECCIÓN 1 · LAB INTERACTIVO</span>
+    <h2>Box model, Flexbox, Grid y componentes</h2>
+    <p>Mueve los controles y mira cómo cambia el resultado. Lo que toca el control es exactamente la propiedad CSS que ves en el código.</p>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="bm">Box model</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="flex">Flexbox</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="grid">Grid</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="comp">Componentes</button>
+  </div>
+
+  <!-- BOX MODEL -->
+  <div class="panel" data-active="true" data-panel="bm">
+    <h3>Toda caja tiene 4 capas</h3>
+    <p class="hint">De adentro hacia afuera: <code>content</code> → <code>padding</code> (espacio interno) → <code>border</code> → <code>margin</code> (espacio externo). Si entiendes esto, entiendes por qué las cosas "no se pegan" o "no se separan".</p>
+    <div class="bm-stage">
+      <div>
+        <span class="lbl" style="background:var(--amber-soft)">margin</span>
+        <div class="bm-margin" id="bm-margin">
+          <span class="lbl" style="background:var(--accent-soft)">border</span>
+          <div class="bm-border" id="bm-border">
+            <span class="lbl">padding</span>
+            <div class="bm-padding">
+              <div class="bm-content">content</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="ctrl"><label>padding <span id="pv">22px</span></label><input type="range" id="p" min="0" max="48" value="22"></div>
+        <div class="ctrl"><label>border <span id="bv">6px</span></label><input type="range" id="b" min="0" max="16" value="6"></div>
+        <div class="ctrl"><label>margin <span id="mv">28px</span></label><input type="range" id="m" min="0" max="48" value="28"></div>
+        <pre><span class="c">/* tip: ponlo SIEMPRE */</span>
+<span class="p">*</span> { <span class="k">box-sizing</span>: <span class="v">border-box</span>; }</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLEXBOX -->
+  <div class="panel" data-panel="flex">
+    <h3>Flexbox · alinear en 1 dimensión</h3>
+    <p class="hint"><code>justify-content</code> mueve sobre el eje principal (horizontal aquí). <code>align-items</code> sobre el eje cruzado (vertical). Es lo que más vas a usar en tu vida frontend.</p>
+    <div class="pg">
+      <div class="seg" data-prop="justifyContent">
+        <span class="seg-label">justify</span>
+        <button aria-pressed="true">flex-start</button><button>center</button><button>flex-end</button><button>space-between</button><button>space-around</button>
+      </div>
+    </div>
+    <div class="pg">
+      <div class="seg" data-prop="alignItems">
+        <span class="seg-label">align</span>
+        <button aria-pressed="true">flex-start</button><button>center</button><button>flex-end</button><button>stretch</button>
+      </div>
+    </div>
+    <div class="flex-stage" id="flexStage">
+      <div class="box short">1</div><div class="box tall">2</div><div class="box">3</div>
+    </div>
+    <pre id="flexCode"></pre>
+  </div>
+
+  <!-- GRID -->
+  <div class="panel" data-panel="grid">
+    <h3>Grid · filas y columnas a la vez</h3>
+    <p class="hint">La unidad <code>fr</code> reparte el espacio sobrante. <code>repeat(3, 1fr)</code> = 3 columnas iguales. Grid es para estructura de página; flexbox para alinear contenido dentro.</p>
+    <div class="pg">
+      <div class="seg" data-grid="cols">
+        <span class="seg-label">columnas</span>
+        <button>1fr</button><button>1fr 1fr</button><button aria-pressed="true">repeat(3,1fr)</button><button>2fr 1fr</button>
+      </div>
+    </div>
+    <div class="pg">
+      <div class="seg" data-grid="gap">
+        <span class="seg-label">gap</span>
+        <button>0</button><button aria-pressed="true">8px</button><button>20px</button>
+      </div>
+    </div>
+    <div class="grid-stage" id="gridStage">
+      <div class="box">1</div><div class="box">2</div><div class="box">3</div>
+      <div class="box">4</div><div class="box">5</div><div class="box">6</div>
+    </div>
+    <pre id="gridCode"></pre>
+  </div>
+
+  <!-- COMPONENTS -->
+  <div class="panel" data-panel="comp">
+    <h3>Los componentes que verás en todas partes</h3>
+    <p class="hint">Estos patrones (botón, card, input, badge, nav) son el 90% de cualquier UI. Fíjate cómo cada uno es solo HTML semántico + box model + flexbox.</p>
+    <div class="gal">
+      <div class="demo">
+        <div class="demo-top">
+          <button class="btn btn-primary">Guardar</button>
+          <button class="btn btn-ghost">Cancelar</button>
+          <button class="btn btn-soft">Más</button>
+        </div>
+        <div class="demo-name">&lt;button class="btn btn-primary"&gt; · variantes: primary / ghost / soft</div>
+      </div>
+      <div class="demo">
+        <div class="demo-top">
+          <div class="card-demo">
+            <div class="ch"></div>
+            <div class="cb"><h4>Card de producto</h4><p>Imagen, título y descripción. Pura caja con borde y radius.</p></div>
+          </div>
+        </div>
+        <div class="demo-name">card = contenedor + media + cuerpo</div>
+      </div>
+      <div class="demo">
+        <div class="demo-top">
+          <div class="field">
+            <label for="d-email">Correo</label>
+            <input id="d-email" type="email" placeholder="tu@correo.com">
+          </div>
+        </div>
+        <div class="demo-name">&lt;label&gt; + &lt;input&gt; siempre juntos (accesibilidad). Prueba el focus.</div>
+      </div>
+      <div class="demo">
+        <div class="demo-top">
+          <span class="badge ok">APROBADO</span>
+          <span class="badge warn">PENDIENTE</span>
+          <span class="badge info">EN REVISIÓN</span>
+        </div>
+        <div class="demo-name">badges de estado · color = significado</div>
+      </div>
+      <div class="demo">
+        <div class="demo-top">
+          <nav class="nav-demo"><b>Banco</b><span class="sp"></span><a>Inicio</a><a>Créditos</a><a>Perfil</a></nav>
+        </div>
+        <div class="demo-name">&lt;nav&gt; con flexbox · el &lt;span class="sp"&gt; empuja los links a la derecha</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const lab = document.currentScript.previousElementSibling;
+  // tabs
+  lab.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+    lab.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected','false'));
+    t.setAttribute('aria-selected','true');
+    lab.querySelectorAll('.panel').forEach(p=>p.dataset.active = (p.dataset.panel===t.dataset.tab)?'true':'false');
+  }));
+
+  // box model
+  const map = {p:['padding','bm-border','--p','pv'],b:['border','bm-margin','--b','bv'],m:['margin',null,'--m','mv']};
+  function bind(id, target, css, out){
+    const el = lab.querySelector('#'+id), tg = lab.querySelector('#'+target), o = lab.querySelector('#'+out);
+    el.addEventListener('input',()=>{ tg.style.setProperty(css, el.value+'px'); o.textContent = el.value+'px'; });
+  }
+  bind('p','bm-border','--p','pv'); bind('b','bm-border','--b','bv'); bind('m','bm-margin','--m','mv');
+
+  // flexbox
+  const fStage = lab.querySelector('#flexStage'), fCode = lab.querySelector('#flexCode');
+  const fState = {justifyContent:'flex-start', alignItems:'flex-start'};
+  function renderFlex(){
+    fStage.style.justifyContent = fState.justifyContent;
+    fStage.style.alignItems = fState.alignItems;
+    fCode.innerHTML = '.contenedor {\n  <span class="k">display</span>: <span class="v">flex</span>;\n  <span class="k">justify-content</span>: <span class="v">'+fState.justifyContent+'</span>;\n  <span class="k">align-items</span>: <span class="v">'+fState.alignItems+'</span>;\n  <span class="k">gap</span>: <span class="v">8px</span>;\n}';
+  }
+  lab.querySelectorAll('.seg[data-prop]').forEach(seg=>{
+    const prop = seg.dataset.prop;
+    seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+      seg.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true'); fState[prop]=b.textContent; renderFlex();
+    }));
+  });
+  renderFlex();
+
+  // grid
+  const gStage = lab.querySelector('#gridStage'), gCode = lab.querySelector('#gridCode');
+  const gState = {cols:'repeat(3,1fr)', gap:'8px'};
+  function renderGrid(){
+    gStage.style.gridTemplateColumns = gState.cols;
+    gStage.style.gap = gState.gap;
+    gCode.innerHTML = '.contenedor {\n  <span class="k">display</span>: <span class="v">grid</span>;\n  <span class="k">grid-template-columns</span>: <span class="v">'+gState.cols+'</span>;\n  <span class="k">gap</span>: <span class="v">'+gState.gap+'</span>;\n}';
+  }
+  lab.querySelectorAll('.seg[data-grid]').forEach(seg=>{
+    const prop = seg.dataset.grid;
+    seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+      seg.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true'); gState[prop]=b.textContent; renderGrid();
+    }));
+  });
+  renderGrid();
+})();
+</script>

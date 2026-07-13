@@ -1,0 +1,264 @@
+<style>
+  :root{
+    --paper:#F4F5F7; --card:#FFFFFF; --ink:#16181D; --ink-soft:#5A616E; --line:#E2E5EA;
+    --accent:#6D28D9; --accent-soft:#EDE7FB; --amber:#F59E0B; --amber-soft:#FEF3D9; --blue:#2348C6;
+    --ok:#1B7A43; --okb:#E3F6EA; --warn:#9A6700; --warnb:#FEF3D9; --err:#B42318; --errb:#FBE3E3;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  *{box-sizing:border-box}
+  .lab{font-family:var(--sans); color:var(--ink); background:var(--paper);
+    border:1px solid var(--line); border-radius:14px; overflow:hidden; max-width:880px; margin:0 auto}
+  .lab-head{padding:20px 22px; border-bottom:1px solid var(--line); background:var(--card)}
+  .lab-head h2{margin:0; font-size:19px; letter-spacing:-.01em}
+  .lab-head p{margin:6px 0 0; font-size:13px; color:var(--ink-soft)}
+  .tag{display:inline-block; font-family:var(--mono); font-size:11px; font-weight:600;
+       color:var(--accent); background:var(--accent-soft); padding:2px 8px; border-radius:6px; margin-bottom:8px}
+  .tabs{display:flex; gap:2px; padding:10px 14px 0; background:var(--card); border-bottom:1px solid var(--line); flex-wrap:wrap}
+  .tab{appearance:none; border:0; background:transparent; cursor:pointer; font-family:var(--sans);
+    font-size:13px; font-weight:600; color:var(--ink-soft); padding:9px 13px; border-radius:8px 8px 0 0; position:relative; top:1px}
+  .tab[aria-selected="true"]{color:var(--accent); background:var(--paper); border:1px solid var(--line); border-bottom:1px solid var(--paper)}
+  .panel{padding:22px; display:none}
+  .panel[data-active="true"]{display:block; animation:fade .25s ease}
+  @keyframes fade{from{opacity:0; transform:translateY(4px)}to{opacity:1; transform:none}}
+  .panel h3{margin:0 0 4px; font-size:15px}
+  .panel .hint{margin:0 0 16px; font-size:13px; color:var(--ink-soft); line-height:1.5}
+  code{font-family:var(--mono); font-size:12px; background:#EEF0F4; padding:1px 5px; border-radius:5px; color:var(--blue)}
+  pre{font-family:var(--mono); font-size:12px; line-height:1.6; background:var(--ink); color:#E7E9EE;
+      padding:14px 16px; border-radius:10px; overflow-x:auto; margin:0}
+  pre .k{color:#C792EA} pre .p{color:#82AAFF} pre .v{color:#C3E88D} pre .c{color:#637777} pre .s{color:#F78C6C}
+
+  .two{display:grid; grid-template-columns:1fr; gap:18px}
+  @media(min-width:620px){.two{grid-template-columns:1fr 1fr}}
+
+  /* reactive demo */
+  .ctrls{display:flex; flex-direction:column; gap:13px}
+  .ctrls .f{display:flex; flex-direction:column; gap:5px}
+  .ctrls label{font-size:12px; font-weight:600}
+  .ctrls input[type=text]{font-family:var(--sans); font-size:13px; padding:8px 11px; border:1px solid var(--line); border-radius:9px; outline:none}
+  .ctrls input[type=text]:focus{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+  .ctrls input[type=range]{accent-color:var(--accent); width:100%}
+  .seg{display:inline-flex; border:1px solid var(--line); border-radius:9px; overflow:hidden; background:#fff; flex-wrap:wrap}
+  .seg button{appearance:none; border:0; background:#fff; cursor:pointer; font-family:var(--mono); font-size:11px;
+    padding:7px 11px; color:var(--ink-soft); border-right:1px solid var(--line)}
+  .seg button:last-child{border-right:0}
+  .seg button[aria-pressed="true"]{background:var(--accent); color:#fff}
+  .rowbtns{display:flex; gap:8px}
+  .mini{appearance:none; border:1px solid var(--line); background:#fff; border-radius:8px; cursor:pointer;
+    font-size:12px; font-weight:600; padding:7px 12px; color:var(--ink)}
+  .mini:hover{border-color:var(--accent); color:var(--accent)}
+
+  .render-out{display:grid; place-items:center; background:repeating-linear-gradient(45deg,#fff,#fff 10px,#FAFAFD 10px,#FAFAFD 20px);
+    border:1px solid var(--line); border-radius:12px; padding:18px; min-height:240px}
+  .rcard{width:100%; max-width:280px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px}
+  .rcard .rtop{display:flex; align-items:center; gap:11px; padding-bottom:14px; border-bottom:1px solid var(--line); margin-bottom:6px}
+  .rcard .rav{width:40px; height:40px; border-radius:50%; background:var(--accent); flex:none; display:grid; place-items:center; color:#fff; font-weight:700; font-family:var(--mono); font-size:13px}
+  .rcard .rname{font-size:16px; font-weight:700}
+  .rcard .rsub{font-size:12px; color:var(--ink-soft)}
+  .rcard .rrow{display:flex; justify-content:space-between; padding:8px 0; font-size:13px}
+  .rcard .rrow .l{color:var(--ink-soft)} .rcard .rrow .v{font-weight:600}
+  .rbadge{font-family:var(--mono); font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px}
+  .rbadge.ok{background:var(--okb); color:var(--ok)} .rbadge.warn{background:var(--warnb); color:var(--warn)} .rbadge.err{background:var(--errb); color:var(--err)}
+  .rprod{display:inline-block; font-size:11px; background:var(--accent-soft); color:var(--accent); padding:2px 8px; border-radius:6px; margin:3px 3px 0 0; font-family:var(--mono)}
+  .flash{animation:flash .4s ease}
+  @keyframes flash{0%{background:var(--amber-soft)}100%{background:#fff}}
+  .reveal{margin-top:14px}
+  .reveal summary{cursor:pointer; font-size:12px; font-weight:700; color:var(--accent); font-family:var(--mono)}
+  .reveal[open] summary{margin-bottom:10px}
+
+  /* dom imperative */
+  .dombox{border:1px solid var(--line); border-radius:12px; background:#fff; padding:20px; text-align:center}
+  #domTarget{display:inline-block; font-size:15px; font-weight:600; padding:10px 18px; border-radius:9px; background:#EEF0F4; color:var(--ink); transition:.2s}
+  #domTarget.activo{background:var(--accent); color:#fff}
+  .domcount{font-family:var(--mono); font-size:12px; color:var(--ink-soft); margin-top:10px}
+
+  /* async */
+  .promviz{display:flex; align-items:center; gap:8px; margin:4px 0 14px; flex-wrap:wrap}
+  .pstate{font-family:var(--mono); font-size:12px; font-weight:700; padding:8px 14px; border-radius:9px; border:1px solid var(--line); background:#fff; color:var(--ink-soft); transition:.2s}
+  .pstate.on-pending{background:var(--warnb); color:var(--warn); border-color:var(--warn)}
+  .pstate.on-ok{background:var(--okb); color:var(--ok); border-color:var(--ok)}
+  .pstate.on-err{background:var(--errb); color:var(--err); border-color:var(--err)}
+  .parrow{color:var(--ink-soft)}
+  .result-line{font-family:var(--mono); font-size:12px; min-height:20px; color:var(--ink); margin-top:6px}
+
+  /* cheat sheet */
+  .cs{border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#fff}
+  .cs-row{display:grid; grid-template-columns:1fr 1fr; border-bottom:1px solid var(--line)}
+  .cs-row:last-child{border-bottom:0}
+  .cs-head{background:#FAFBFC; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-soft)}
+  .cs-cell{padding:11px 14px; font-family:var(--mono); font-size:12px; border-right:1px solid var(--line)}
+  .cs-cell:last-child{border-right:0}
+  .cs-cell .note{font-family:var(--sans); font-size:11px; color:var(--ink-soft); display:block; margin-top:3px}
+</style>
+
+<div class="lab">
+  <div class="lab-head">
+    <span class="tag">LECCIÓN 3 · LAB INTERACTIVO</span>
+    <h2>JavaScript y el modelo declarativo</h2>
+    <p>El concepto que desbloquea todo framework: cambias el estado, la vista se redibuja sola.</p>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="state">UI = f(estado)</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="dom">El DOM</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="async">async / fetch</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="cs">JS para un dev de C#</button>
+  </div>
+
+  <!-- STATE -->
+  <div class="panel" data-active="true" data-panel="state">
+    <h3>Cambia el estado, no la pantalla</h3>
+    <p class="hint">Estos controles solo modifican un objeto <code>estado</code> y llaman a <code>render()</code>. Nadie toca el DOM a mano. La tarjeta de la derecha es siempre una función del estado.</p>
+    <div class="two">
+      <div class="ctrls">
+        <div class="f"><label>estado.nombre</label><input type="text" id="s-name" value="Stalin Freire"></div>
+        <div class="f"><label>estado.score <span id="s-score-v" style="font-family:var(--mono);color:var(--accent)">842</span></label><input type="range" id="s-score" min="300" max="1000" value="842"></div>
+        <div class="f"><label>estado.status</label>
+          <div class="seg" id="s-status">
+            <button aria-pressed="true" data-v="ok">Al día</button><button data-v="warn">En revisión</button><button data-v="err">En mora</button>
+          </div>
+        </div>
+        <div class="f"><label>estado.productos</label>
+          <div class="rowbtns">
+            <button class="mini" id="s-add">+ producto</button>
+            <button class="mini" id="s-rm">− producto</button>
+          </div>
+        </div>
+      </div>
+      <div class="render-out"><div id="rmount"></div></div>
+    </div>
+    <details class="reveal">
+      <summary>ver la función render()</summary>
+      <pre><span class="k">function</span> <span class="p">render</span>(estado) {
+  <span class="c">// devuelve la vista a partir del estado. punto.</span>
+  mount.innerHTML = `
+    &lt;div class="rname"&gt;${estado.nombre}&lt;/div&gt;
+    &lt;div class="rrow"&gt;score: ${estado.score}&lt;/div&gt;
+    &lt;span class="rbadge ${estado.status}"&gt;...&lt;/span&gt;
+    ${estado.productos.map(p =&gt; `&lt;span&gt;${p}&lt;/span&gt;`).join(<span class="s">''</span>)}
+  `;
+}
+<span class="c">// cada control hace: estado.x = ...; render(estado);</span></pre>
+    </details>
+  </div>
+
+  <!-- DOM -->
+  <div class="panel" data-panel="dom">
+    <h3>La forma imperativa (manual)</h3>
+    <p class="hint">Aquí sí tocamos el DOM directo: <code>querySelector</code>, <code>classList</code>, <code>textContent</code>. Funciona para algo chico... pero imagina 50 elementos y estado cruzado. Por eso existen los frameworks.</p>
+    <div class="dombox">
+      <span id="domTarget">Cuenta del cliente</span>
+      <div class="rowbtns" style="justify-content:center; margin-top:16px">
+        <button class="mini" id="dom-toggle">classList.toggle('activo')</button>
+        <button class="mini" id="dom-text">textContent = ...</button>
+      </div>
+      <div class="domcount" id="domCount">clicks registrados: 0</div>
+    </div>
+    <pre style="margin-top:16px"><span class="k">const</span> el = document.<span class="p">querySelector</span>(<span class="s">'#target'</span>);
+el.<span class="p">addEventListener</span>(<span class="s">'click'</span>, () =&gt; {
+  el.classList.<span class="p">toggle</span>(<span class="s">'activo'</span>);   <span class="c">// cambias clase a mano</span>
+  el.textContent = <span class="s">'Activado'</span>;        <span class="c">// cambias texto a mano</span>
+});</pre>
+  </div>
+
+  <!-- ASYNC -->
+  <div class="panel" data-panel="async">
+    <h3>El ciclo de vida de una Promise</h3>
+    <p class="hint"><code>Promise</code> ≈ <code>Task</code> de C#. Una promesa nace <b>pendiente</b> y termina <b>resuelta</b> o <b>rechazada</b>. Dispara una "petición" simulada y míralo.</p>
+    <div class="promviz">
+      <span class="pstate" id="ps-pending">pending</span>
+      <span class="parrow">→</span>
+      <span class="pstate" id="ps-ok">fulfilled</span>
+      <span class="parrow">/</span>
+      <span class="pstate" id="ps-err">rejected</span>
+    </div>
+    <div class="rowbtns">
+      <button class="mini" id="fetch-ok">fetch() exitoso</button>
+      <button class="mini" id="fetch-err">fetch() con error</button>
+    </div>
+    <div class="result-line" id="fetchResult">esperando…</div>
+    <pre style="margin-top:14px"><span class="k">async function</span> <span class="p">cargarCliente</span>(id) {
+  <span class="k">try</span> {
+    <span class="k">const</span> res = <span class="k">await</span> <span class="p">fetch</span>(<span class="s">`/api/clientes/${id}`</span>);  <span class="c">// igual que await en C#</span>
+    <span class="k">const</span> data = <span class="k">await</span> res.<span class="p">json</span>();
+    <span class="k">return</span> data;
+  } <span class="k">catch</span> (e) {
+    console.<span class="p">error</span>(<span class="s">'falló la petición'</span>, e);
+  }
+}</pre>
+  </div>
+
+  <!-- CHEAT SHEET -->
+  <div class="panel" data-panel="cs">
+    <h3>De C# a JS: lo que muerde</h3>
+    <p class="hint">Las diferencias que más te van a hacer tropezar al inicio. Memoriza estas y evitas el 80% de los bugs raros.</p>
+    <div class="cs">
+      <div class="cs-row cs-head"><div class="cs-cell">Concepto en C#</div><div class="cs-cell">Cómo es en JS / TS</div></div>
+      <div class="cs-row"><div class="cs-cell">== compara valores<span class="note">tipado fuerte</span></div><div class="cs-cell">usa === (estricto)<span class="note">== hace coerción: "1"==1 es true. Evítalo.</span></div></div>
+      <div class="cs-row"><div class="cs-cell">null</div><div class="cs-cell">null y undefined<span class="note">dos "nada". Usa ?. y ?? para manejarlas.</span></div></div>
+      <div class="cs-row"><div class="cs-cell">this = la instancia<span class="note">siempre predecible</span></div><div class="cs-cell">this depende de la llamada<span class="note">usa arrow functions () =&gt; para heredarlo.</span></div></div>
+      <div class="cs-row"><div class="cs-cell">Task / async / await</div><div class="cs-cell">Promise / async / await<span class="note">casi idéntico. .then() ≈ ContinueWith().</span></div></div>
+      <div class="cs-row"><div class="cs-cell">foreach + LINQ<span class="note">.Select().Where()</span></div><div class="cs-cell">.map() .filter() .reduce()<span class="note">el idioma del frontend. Encadénalos.</span></div></div>
+      <div class="cs-row"><div class="cs-cell">if (x != null)</div><div class="cs-cell">if (x) — truthy/falsy<span class="note">0, "", null, undefined, NaN son falsy.</span></div></div>
+      <div class="cs-row"><div class="cs-cell">var (tipado)</div><div class="cs-cell">const por defecto, let si reasignas<span class="note">nunca var. const no es inmutable, solo no-reasignable.</span></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const lab = document.currentScript.previousElementSibling;
+  lab.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+    lab.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected','false'));
+    t.setAttribute('aria-selected','true');
+    lab.querySelectorAll('.panel').forEach(p=>p.dataset.active=(p.dataset.panel===t.dataset.tab)?'true':'false');
+  }));
+  const esc = s => s.replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  // ---- reactive state demo ----
+  const mount = lab.querySelector('#rmount');
+  const statusText = {ok:'Al día', warn:'En revisión', err:'En mora'};
+  const estado = { nombre:'Stalin Freire', score:842, status:'ok', productos:['Cuenta','Tarjeta','Crédito'] };
+  function initials(n){ return (n.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('')||'?').toUpperCase(); }
+  function render(){
+    mount.innerHTML =
+      '<div class="rcard flash">'+
+        '<div class="rtop"><div class="rav">'+esc(initials(estado.nombre))+'</div>'+
+          '<div><div class="rname">'+esc(estado.nombre||'—')+'</div><div class="rsub">Cliente desde 2019</div></div></div>'+
+        '<div class="rrow"><span class="l">Score</span><span class="v">'+estado.score+' / 1000</span></div>'+
+        '<div class="rrow"><span class="l">Estado</span><span class="rbadge '+estado.status+'">'+statusText[estado.status]+'</span></div>'+
+        '<div class="rrow"><span class="l">Productos</span><span class="v">'+estado.productos.length+'</span></div>'+
+        '<div>'+estado.productos.map(p=>'<span class="rprod">'+esc(p)+'</span>').join('')+'</div>'+
+      '</div>';
+  }
+  render();
+  lab.querySelector('#s-name').addEventListener('input', e=>{ estado.nombre=e.target.value; render(); });
+  const sv = lab.querySelector('#s-score-v');
+  lab.querySelector('#s-score').addEventListener('input', e=>{ estado.score=+e.target.value; sv.textContent=e.target.value; render(); });
+  lab.querySelectorAll('#s-status button').forEach(b=>b.addEventListener('click',()=>{
+    lab.querySelectorAll('#s-status button').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); estado.status=b.dataset.v; render();
+  }));
+  const pool=['Cuenta','Tarjeta','Crédito','Inversión','Seguro','Hipoteca'];
+  lab.querySelector('#s-add').addEventListener('click',()=>{ if(estado.productos.length<pool.length){ estado.productos.push(pool[estado.productos.length]); render(); }});
+  lab.querySelector('#s-rm').addEventListener('click',()=>{ if(estado.productos.length>0){ estado.productos.pop(); render(); }});
+
+  // ---- dom imperative ----
+  let clicks=0;
+  const target=lab.querySelector('#domTarget'), count=lab.querySelector('#domCount');
+  lab.querySelector('#dom-toggle').addEventListener('click',()=>{ target.classList.toggle('activo'); clicks++; count.textContent='clicks registrados: '+clicks; });
+  lab.querySelector('#dom-text').addEventListener('click',()=>{ target.textContent = target.textContent==='Cuenta del cliente'?'Cuenta activada ✓':'Cuenta del cliente'; clicks++; count.textContent='clicks registrados: '+clicks; });
+
+  // ---- async ----
+  const psP=lab.querySelector('#ps-pending'), psO=lab.querySelector('#ps-ok'), psE=lab.querySelector('#ps-err'), out=lab.querySelector('#fetchResult');
+  function reset(){ [psP,psO,psE].forEach(p=>p.className='pstate'); }
+  function run(ok){
+    reset(); psP.classList.add('on-pending'); out.textContent='pending… (esperando respuesta del servidor)';
+    new Promise((res,rej)=> setTimeout(()=> ok?res({score:842}):rej('500 Internal Server Error'), 1100))
+      .then(data=>{ reset(); psO.classList.add('on-ok'); out.textContent='✓ resuelta → '+JSON.stringify(data); })
+      .catch(err=>{ reset(); psE.classList.add('on-err'); out.textContent='✕ rechazada → '+err; });
+  }
+  lab.querySelector('#fetch-ok').addEventListener('click',()=>run(true));
+  lab.querySelector('#fetch-err').addEventListener('click',()=>run(false));
+})();
+</script>

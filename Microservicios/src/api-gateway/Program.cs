@@ -1,5 +1,6 @@
 using ApiGateway.Services;
 using Contracts.Contacts;
+using Contracts.Ledger;
 using Contracts.Users;
 using MassTransit;
 
@@ -20,8 +21,13 @@ builder.Services.AddMassTransit(configurator =>
 
     configurator.AddRequestClient<CreateUserCommand>();
     configurator.AddRequestClient<GetUserByIdQuery>();
+    configurator.AddRequestClient<UpdateUserCommand>();
     configurator.AddRequestClient<CreateContactCommand>();
     configurator.AddRequestClient<GetContactsByUserIdQuery>();
+    configurator.AddRequestClient<OpenAccountCommand>();
+    configurator.AddRequestClient<GetAccountByIdQuery>();
+    configurator.AddRequestClient<DepositFundsCommand>();
+    configurator.AddRequestClient<TransferFundsCommand>();
 
     configurator.UsingRabbitMq((context, rabbitMq) =>
     {
@@ -36,6 +42,7 @@ builder.Services.AddMassTransit(configurator =>
 
 builder.Services.AddScoped<IUserGatewayService, UserGatewayService>();
 builder.Services.AddScoped<IContactGatewayService, ContactGatewayService>();
+builder.Services.AddScoped<ILedgerGatewayService, LedgerGatewayService>();
 builder.Services.AddScoped<IUserContactAggregatorService, UserContactAggregatorService>();
 
 var app = builder.Build();

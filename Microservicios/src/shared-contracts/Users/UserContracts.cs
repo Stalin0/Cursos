@@ -6,6 +6,13 @@ public sealed record CreateUserCommand(
     string LastName,
     string Email);
 
+public sealed record UpdateUserCommand(
+    Guid UserId,
+    string DocumentNumber,
+    string FirstName,
+    string LastName,
+    string Email);
+
 public sealed record GetUserByIdQuery(Guid UserId);
 
 public sealed record UserResult(
@@ -24,3 +31,11 @@ public sealed record UserCreatedEvent(
     string LastName,
     string Email,
     DateTime CreatedAt);
+
+public sealed record UserUpdatedEvent(
+    Guid UserId,
+    string DocumentNumber,
+    string FirstName,
+    string LastName,
+    string Email,
+    DateTime UpdatedAt);

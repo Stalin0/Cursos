@@ -1,0 +1,267 @@
+<style>
+  :root{
+    --paper:#F4F5F7; --card:#FFFFFF; --ink:#16181D; --ink-soft:#5A616E; --line:#E2E5EA;
+    --accent:#6D28D9; --accent-soft:#EDE7FB; --amber:#F59E0B; --amber-soft:#FEF3D9; --blue:#2348C6;
+    --ok:#1B7A43; --okb:#E3F6EA;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  *{box-sizing:border-box}
+  .lab{font-family:var(--sans); color:var(--ink); background:var(--paper);
+    border:1px solid var(--line); border-radius:14px; overflow:hidden; max-width:880px; margin:0 auto;}
+  .lab-head{padding:20px 22px; border-bottom:1px solid var(--line); background:var(--card)}
+  .lab-head h2{margin:0; font-size:19px; letter-spacing:-.01em}
+  .lab-head p{margin:6px 0 0; font-size:13px; color:var(--ink-soft)}
+  .tag{display:inline-block; font-family:var(--mono); font-size:11px; font-weight:600;
+       color:var(--accent); background:var(--accent-soft); padding:2px 8px; border-radius:6px; margin-bottom:8px}
+  .tabs{display:flex; gap:2px; padding:10px 14px 0; background:var(--card); border-bottom:1px solid var(--line); flex-wrap:wrap}
+  .tab{appearance:none; border:0; background:transparent; cursor:pointer; font-family:var(--sans);
+    font-size:13px; font-weight:600; color:var(--ink-soft); padding:9px 13px; border-radius:8px 8px 0 0; position:relative; top:1px}
+  .tab[aria-selected="true"]{color:var(--accent); background:var(--paper); border:1px solid var(--line); border-bottom:1px solid var(--paper)}
+  .panel{padding:22px; display:none}
+  .panel[data-active="true"]{display:block; animation:fade .25s ease}
+  @keyframes fade{from{opacity:0; transform:translateY(4px)}to{opacity:1; transform:none}}
+  .panel h3{margin:0 0 4px; font-size:15px}
+  .panel .hint{margin:0 0 16px; font-size:13px; color:var(--ink-soft); line-height:1.5}
+  code{font-family:var(--mono); font-size:12px; background:#EEF0F4; padding:1px 5px; border-radius:5px; color:var(--blue)}
+
+  /* ---- antes / despues ---- */
+  .ba-wrap{display:grid; grid-template-columns:1fr; gap:18px}
+  @media(min-width:640px){.ba-wrap{grid-template-columns:1.15fr .85fr}}
+  .toggles{display:flex; flex-direction:column; gap:8px}
+  .tg{display:flex; align-items:center; gap:11px; padding:10px 12px; border:1px solid var(--line);
+      border-radius:10px; background:#fff; cursor:pointer; user-select:none; transition:.15s}
+  .tg:hover{border-color:var(--accent)}
+  .tg input{appearance:none; width:34px; height:20px; background:#D5D9E0; border-radius:20px; position:relative; cursor:pointer; transition:.2s; flex:none}
+  .tg input:checked{background:var(--accent)}
+  .tg input::after{content:""; position:absolute; width:16px; height:16px; background:#fff; border-radius:50%; top:2px; left:2px; transition:.2s}
+  .tg input:checked::after{left:16px}
+  .tg .tt{font-size:12.5px; font-weight:600}
+  .tg .td{font-size:11px; color:var(--ink-soft); margin-top:1px}
+  .tg .meta{flex:1}
+  .master{background:var(--accent); color:#fff; border-color:var(--accent); justify-content:center; font-weight:700; font-size:13px; padding:11px}
+  .master:hover{filter:brightness(1.06)}
+
+  /* the demo card — flat baseline, upgrades via classes on .pcard */
+  .stage{display:grid; place-items:center; background:repeating-linear-gradient(45deg,#fff,#fff 10px,#FAFAFD 10px,#FAFAFD 20px);
+    border:1px solid var(--line); border-radius:12px; padding:18px; min-height:260px}
+  .pcard{width:100%; max-width:300px; background:#fff; border:1px solid var(--line); border-radius:12px;
+    --pad:8px; --gap:4px; --lh:1.25;
+    padding:var(--pad);}
+  .pcard .ptop{display:flex; align-items:center; gap:var(--gap); padding:var(--pad)}
+  .pcard .pavatar{width:38px; height:38px; border-radius:50%; background:#C9263E; flex:none; display:grid; place-items:center; color:#fff; font-weight:700; font-family:var(--mono)}
+  .pcard .pname{font-size:15px; font-weight:700; color:#C9263E; line-height:var(--lh)}
+  .pcard .psub{font-size:15px; font-weight:700; color:#1B9E55}
+  .pcard .prow{display:flex; justify-content:space-between; padding:var(--pad); gap:var(--gap)}
+  .pcard .plabel{font-size:15px; font-weight:700; color:#2348C6}
+  .pcard .pval{font-size:15px; font-weight:700; color:#1B9E55; line-height:var(--lh)}
+  .pcard .pbtn{display:block; width:calc(100% - 16px); margin:var(--gap) var(--pad); text-align:center;
+    background:#C9263E; color:#fff; font-weight:700; font-size:15px; border-radius:8px; padding:8px; border:0}
+
+  /* upgrades */
+  .pcard.t-type .pname{font-size:18px}
+  .pcard.t-type .psub{font-size:12px}
+  .pcard.t-type .plabel{font-size:12px}
+  .pcard.t-type .pval{font-size:14px}
+  .pcard.t-weight .pname{font-weight:700}
+  .pcard.t-weight .psub{font-weight:500}
+  .pcard.t-weight .plabel{font-weight:500; text-transform:uppercase; letter-spacing:.04em}
+  .pcard.t-weight .pval{font-weight:600}
+  .pcard.t-weight .pbtn{font-weight:600}
+  .pcard.t-space{--pad:16px; --gap:10px}
+  .pcard.t-space .pbtn{margin-top:12px}
+  .pcard.t-color .pavatar{background:var(--accent)}
+  .pcard.t-color .pname{color:var(--ink)}
+  .pcard.t-color .psub{color:var(--ink-soft)}
+  .pcard.t-color .plabel{color:var(--ink-soft)}
+  .pcard.t-color .pval{color:var(--ink)}
+  .pcard.t-color .pbtn{background:var(--accent)}
+  .pcard.t-read{--lh:1.5}
+  .pcard.t-read .prow{border-top:1px solid var(--line)}
+  .pcard.t-read .ptop{border-bottom:1px solid var(--line)}
+
+  /* ---- type scale ---- */
+  .scale-ctrl{display:flex; gap:18px; flex-wrap:wrap; margin-bottom:16px}
+  .scale-ctrl .seg{display:inline-flex; border:1px solid var(--line); border-radius:9px; overflow:hidden; background:#fff}
+  .scale-ctrl .seg button{appearance:none; border:0; background:#fff; cursor:pointer; font-family:var(--mono); font-size:11px;
+    padding:7px 11px; color:var(--ink-soft); border-right:1px solid var(--line)}
+  .scale-ctrl .seg button:last-child{border-right:0}
+  .scale-ctrl .seg button[aria-pressed="true"]{background:var(--accent); color:#fff}
+  .scale-ctrl .lbl{font-size:11px; font-weight:700; color:var(--ink-soft); align-self:center; font-family:var(--mono)}
+  .scale-list{border:1px solid var(--line); border-radius:12px; background:#fff; padding:6px 18px}
+  .scale-row{display:flex; align-items:baseline; gap:14px; padding:9px 0; border-bottom:1px solid var(--line)}
+  .scale-row:last-child{border-bottom:0}
+  .scale-row .sz{font-family:var(--mono); font-size:11px; color:var(--accent); width:62px; flex:none}
+  .scale-row .sample{font-weight:600; line-height:1.1; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+
+  /* ---- spacing ---- */
+  .sp-list{display:flex; flex-direction:column; gap:10px}
+  .sp-row{display:flex; align-items:center; gap:14px}
+  .sp-row .sp-tok{font-family:var(--mono); font-size:11px; color:var(--accent); width:96px; flex:none}
+  .sp-row .sp-bar{height:22px; background:var(--accent-soft); border-radius:5px; border:1px solid var(--accent)}
+
+  /* ---- color/contrast ---- */
+  .cc-grid{display:grid; grid-template-columns:1fr; gap:18px}
+  @media(min-width:560px){.cc-grid{grid-template-columns:1fr 1fr}}
+  .cc-controls{display:flex; flex-direction:column; gap:14px}
+  .cc-field{display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:12.5px; font-weight:600}
+  .cc-field input[type=color]{width:46px; height:32px; border:1px solid var(--line); border-radius:8px; background:#fff; cursor:pointer; padding:2px}
+  .cc-preview{border:1px solid var(--line); border-radius:12px; padding:22px; display:flex; flex-direction:column; gap:6px; justify-content:center}
+  .cc-preview .big{font-size:22px; font-weight:700}
+  .cc-preview .small{font-size:13px}
+  .cc-result{margin-top:8px; display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+  .cc-ratio{font-family:var(--mono); font-size:16px; font-weight:700}
+  .pill{font-family:var(--mono); font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px}
+  .pill.pass{background:var(--okb); color:var(--ok)} .pill.fail{background:#FBE3E3; color:#B42318}
+</style>
+
+<div class="lab">
+  <div class="lab-head">
+    <span class="tag">LECCIÓN 2 · LAB INTERACTIVO</span>
+    <h2>De "funciona" a "se ve profesional"</h2>
+    <p>Las decisiones de diseño son acumulativas. Enciende los interruptores y míralas sumarse.</p>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="ba">Antes / Después</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="type">Escala tipográfica</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="space">Espaciado</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="color">Color y contraste</button>
+  </div>
+
+  <!-- ANTES / DESPUES -->
+  <div class="panel" data-active="true" data-panel="ba">
+    <h3>La misma tarjeta, decisión por decisión</h3>
+    <p class="hint">El contenido no cambia nunca. Lo único que cambia son decisiones de diseño. Enciéndelas en orden y observa.</p>
+    <div class="ba-wrap">
+      <div class="stage">
+        <div class="pcard" id="pcard">
+          <div class="ptop">
+            <div class="pavatar">SF</div>
+            <div>
+              <div class="pname">Stalin Freire</div>
+              <div class="psub">Cliente desde 2019</div>
+            </div>
+          </div>
+          <div class="prow"><span class="plabel">Score crediticio</span><span class="pval">842 / 1000</span></div>
+          <div class="prow"><span class="plabel">Productos activos</span><span class="pval">3</span></div>
+          <div class="prow"><span class="plabel">Estado</span><span class="pval">Al día</span></div>
+          <button class="pbtn">Ver perfil completo</button>
+        </div>
+      </div>
+      <div class="toggles" id="toggles">
+        <label class="tg"><input type="checkbox" data-c="t-type"><span class="meta"><span class="tt">Escala tipográfica</span><div class="td">tamaños que riman, no al azar</div></span></label>
+        <label class="tg"><input type="checkbox" data-c="t-weight"><span class="meta"><span class="tt">Jerarquía por peso</span><div class="td">grosor crea importancia</div></span></label>
+        <label class="tg"><input type="checkbox" data-c="t-space"><span class="meta"><span class="tt">Escala de espaciado</span><div class="td">ritmo de 8px, aire</div></span></label>
+        <label class="tg"><input type="checkbox" data-c="t-color"><span class="meta"><span class="tt">Color con restraint</span><div class="td">neutros + 1 acento</div></span></label>
+        <label class="tg"><input type="checkbox" data-c="t-read"><span class="meta"><span class="tt">Legibilidad</span><div class="td">line-height + separadores</div></span></label>
+        <label class="tg master"><input type="checkbox" id="master" style="display:none">Encender todo ✦</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- TYPE SCALE -->
+  <div class="panel" data-panel="type">
+    <h3>Una razón, todos los tamaños</h3>
+    <p class="hint">Base 16px × razón fija para cada nivel. Cambia la razón y mira cómo todo el sistema se reajusta de forma armónica.</p>
+    <div class="scale-ctrl">
+      <div class="seg" id="ratioSeg">
+        <span class="lbl" style="padding:0 8px; align-self:center">razón</span>
+        <button data-r="1.2">1.200 menor</button><button aria-pressed="true" data-r="1.25">1.250 mayor</button><button data-r="1.333">1.333 cuarta</button><button data-r="1.5">1.500</button>
+      </div>
+    </div>
+    <div class="scale-list" id="scaleList"></div>
+  </div>
+
+  <!-- SPACING -->
+  <div class="panel" data-panel="space">
+    <h3>La escala de 8 puntos</h3>
+    <p class="hint">Usa solo estos valores para padding, margin y gap. Nada de <code>13px</code> sueltos. La consistencia hace que todo "encaje" sin esfuerzo.</p>
+    <div class="sp-list" id="spList"></div>
+  </div>
+
+  <!-- COLOR / CONTRAST -->
+  <div class="panel" data-panel="color">
+    <h3>Contraste = legibilidad (y ley)</h3>
+    <p class="hint">WCAG AA pide <code>4.5:1</code> para texto normal y <code>3:1</code> para texto grande. Mueve los colores y verás si pasa. En banca esto no es opcional.</p>
+    <div class="cc-grid">
+      <div class="cc-controls">
+        <div class="cc-field"><span>Color de texto</span><input type="color" id="cFg" value="#5A616E"></div>
+        <div class="cc-field"><span>Color de fondo</span><input type="color" id="cBg" value="#FFFFFF"></div>
+        <div class="cc-result">
+          <span class="cc-ratio" id="cRatio">—</span>
+          <span class="pill" id="cAA">AA</span>
+          <span class="pill" id="cAAA">AAA</span>
+        </div>
+        <p class="hint" style="margin:0">Truco: el texto secundario "gris suave" suele fallar AA si lo aclaras de más. Verifícalo siempre.</p>
+      </div>
+      <div class="cc-preview" id="cPrev">
+        <span class="big">Texto grande</span>
+        <span class="small">Texto de párrafo normal para leer datos del cliente.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const lab = document.currentScript.previousElementSibling;
+  lab.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+    lab.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected','false'));
+    t.setAttribute('aria-selected','true');
+    lab.querySelectorAll('.panel').forEach(p=>p.dataset.active=(p.dataset.panel===t.dataset.tab)?'true':'false');
+  }));
+
+  // antes/despues
+  const pcard = lab.querySelector('#pcard');
+  const checks = [...lab.querySelectorAll('#toggles input[data-c]')];
+  checks.forEach(ch=>ch.addEventListener('change',()=>{ pcard.classList.toggle(ch.dataset.c, ch.checked); syncMaster(); }));
+  const master = lab.querySelector('#master');
+  function syncMaster(){ master.checked = checks.every(c=>c.checked); }
+  master.addEventListener('change',()=>{
+    checks.forEach(c=>{ c.checked = master.checked; pcard.classList.toggle(c.dataset.c, master.checked); });
+  });
+
+  // type scale
+  const scaleList = lab.querySelector('#scaleList');
+  const levels = [['H1',3],['H2',2],['H3',1],['Cuerpo',0],['Pequeño',-1],['Mini',-2]];
+  const sample = {3:'Perfil del cliente',2:'Score crediticio',1:'Productos activos',0:'El cliente está al día con sus pagos.', '-1':'Actualizado hace 2 horas','-2':'ID 0040291'};
+  function renderScale(ratio){
+    scaleList.innerHTML = levels.map(([name,step])=>{
+      const px = Math.round(16*Math.pow(ratio,step)*100)/100;
+      return '<div class="scale-row"><span class="sz">'+px+'px</span><span class="sample" style="font-size:'+px+'px">'+sample[step]+'</span></div>';
+    }).join('');
+  }
+  lab.querySelectorAll('#ratioSeg button').forEach(b=>b.addEventListener('click',()=>{
+    lab.querySelectorAll('#ratioSeg button').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); renderScale(parseFloat(b.dataset.r));
+  }));
+  renderScale(1.25);
+
+  // spacing
+  const spList = lab.querySelector('#spList');
+  [4,8,16,24,32,48,64].forEach((v,i)=>{
+    const tok = '--space-'+(i+1);
+    spList.insertAdjacentHTML('beforeend',
+      '<div class="sp-row"><span class="sp-tok">'+tok+' · '+v+'px</span><span class="sp-bar" style="width:'+v+'px"></span></div>');
+  });
+
+  // contrast
+  function lum(hex){
+    const n = parseInt(hex.slice(1),16), r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+    const f=c=>{c/=255; return c<=0.03928? c/12.92 : Math.pow((c+0.055)/1.055,2.4);};
+    return 0.2126*f(r)+0.7152*f(g)+0.0722*f(b);
+  }
+  const fg=lab.querySelector('#cFg'), bg=lab.querySelector('#cBg'), prev=lab.querySelector('#cPrev'),
+        rOut=lab.querySelector('#cRatio'), aa=lab.querySelector('#cAA'), aaa=lab.querySelector('#cAAA');
+  function setPill(el,pass){ el.className='pill '+(pass?'pass':'fail'); el.textContent=el.id.slice(1)+(pass?' ✓':' ✕'); }
+  function calc(){
+    const L1=lum(fg.value), L2=lum(bg.value);
+    const ratio=((Math.max(L1,L2)+0.05)/(Math.min(L1,L2)+0.05));
+    rOut.textContent=ratio.toFixed(2)+':1';
+    prev.style.background=bg.value; prev.style.color=fg.value;
+    setPill(aa, ratio>=4.5); setPill(aaa, ratio>=7);
+  }
+  fg.addEventListener('input',calc); bg.addEventListener('input',calc); calc();
+})();
+</script>

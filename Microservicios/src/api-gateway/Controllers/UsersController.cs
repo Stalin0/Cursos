@@ -23,4 +23,14 @@ public sealed class UsersController(IUserGatewayService userGatewayService) : Co
         var user = await userGatewayService.GetByIdAsync(id, cancellationToken);
         return user is null ? NotFound() : Ok(user);
     }
+
+    [HttpPut("{id:guid}")]
+    public async Task<ActionResult<UserResponse>> Update(
+        Guid id,
+        UpdateUserRequest request,
+        CancellationToken cancellationToken)
+    {
+        var user = await userGatewayService.UpdateAsync(id, request, cancellationToken);
+        return user is null ? NotFound() : Ok(user);
+    }
 }

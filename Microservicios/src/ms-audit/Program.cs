@@ -12,6 +12,9 @@ builder.Services.AddMassTransit(configurator =>
 {
     configurator.AddConsumer<UserCreatedAuditConsumer>();
     configurator.AddConsumer<ContactCreatedAuditConsumer>();
+    configurator.AddConsumer<AccountOpenedAuditConsumer>();
+    configurator.AddConsumer<FundsDepositedAuditConsumer>();
+    configurator.AddConsumer<FundsTransferredAuditConsumer>();
 
     configurator.UsingRabbitMq((context, rabbitMq) =>
     {
